@@ -7,21 +7,29 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class ChatClient {   
+public class ChatClient implements Runnable{   
     private static final String SERVER_ADRESS = "127.0.0.1";
-    private Socket clientSocket;
+    private ClientSocket clientSocket;
     private Scanner scanner;
-    private PrintWriter out;
 
     public ChatClient(){
         scanner = new Scanner(System.in);
     }
 
     public void start() throws IOException{
-        clientSocket = new Socket(SERVER_ADRESS, ChatServer.PORT);
-        this.out = new PrintWriter(clientSocket.getOutputStream(), true);
+        clientSocket = new ClientSocket(new Socket(SERVER_ADRESS, ChatServer.PORT));  
         System.out.println("Cliente conctado ao servidor em " + SERVER_ADRESS + ":" + ChatServer.PORT);
+        new Thread(this).start();;
         messageLoop();
+    } 
+
+    @Override
+    public void run(){
+        String msg;
+        while ((msg = clientSocket.getMessage()) != null) {
+            System.out.printf("Mensagem recebida do servidor: %s\n", msg);
+        }
+        
     }
 
     private void messageLoop() throws IOException{
@@ -29,7 +37,7 @@ public class ChatClient {
         do {
             System.out.print("Digite uma mensagem (ou sair para finalizar): ");
             msg = scanner.nextLine();
-            out.println(msg);
+            clientSocket.sendMsg(msg);
         } while (!msg.equalsIgnoreCase("sair"));
     }
     public static void main(String[] args) {
