@@ -64,6 +64,10 @@ public class ChatClientGUI extends JFrame {
     private void sendMessage() {
         String message = messageField.getText().trim();
         if (!message.isEmpty()) {
+            // Exibe a mensagem do cliente na área de chat antes de enviá-la para o servidor
+            chatArea.append("Você: " + message + "\n");
+
+            // Envia a mensagem para o servidor
             clientSocket.sendMsg(message);
             messageField.setText("");
         }

@@ -1,4 +1,4 @@
-package defaultpackage;
+/*package defaultpackage;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -50,3 +50,4 @@ public class ChatClient implements Runnable{
         System.out.println("Cliente Finalizado!");
     }
 }
+*/
