@@ -9,46 +9,46 @@ import java.util.List;
 public class ChatServer {
     public static final int PORT = 4000;
     private ServerSocket serverSocket;
-    private final List<ClientSocket> clients = new LinkedList<>();
+    private final List<ClienteSocket> clientes = new LinkedList<>();
 
     public void start() throws IOException {
         serverSocket = new ServerSocket(PORT);
-        clientConnectionLoop();
+        conexaoCliente();
         System.out.println("Servidor iniciado na porta " + PORT);
     }
 
-    private void clientConnectionLoop() throws IOException {
+    private void conexaoCliente() throws IOException {
         while (true) {
-            ClientSocket clientSocket = new ClientSocket(serverSocket.accept());
-            clients.add(clientSocket);
-            new Thread(() -> clientMessageLoop(clientSocket)).start();
+            ClienteSocket clienteSocket = new ClienteSocket(serverSocket.accept());
+            clientes.add(clienteSocket);
+            new Thread(() -> mensagemCliente(clienteSocket)).start();
         }
     }
 
-    private void clientMessageLoop(ClientSocket clientSocket) {
-        String msg;
+    private void mensagemCliente(ClienteSocket clienteSocket) {
+        String mensagem;
         try {
-            while ((msg = clientSocket.getMessage()) != null) {
-                if ("sair".equalsIgnoreCase(msg))
+            while ((mensagem = clienteSocket.getMensagem()) != null) {
+                if ("sair".equalsIgnoreCase(mensagem))
                     return;
 
-                System.out.printf("Msg recebida do cliente %s: %s\n", clientSocket.getRemoteSocketAddress(), msg);
+                System.out.printf("Msg recebida do cliente %s: %s\n", clienteSocket.getEnderecoSocketRemoto(), mensagem);
 
-                sendMsgToAll(clientSocket, msg);
+                enviarMensagemParaTodos(clienteSocket, mensagem);
             }
         } finally {
-            clientSocket.close();
+            clienteSocket.fechar();
         }
     }
 
-    private void sendMsgToAll(ClientSocket sender, String msg) {
-        Iterator<ClientSocket> iterator = clients.iterator();
+    private void enviarMensagemParaTodos(ClienteSocket sender, String msg) {
+        Iterator<ClienteSocket> iterator = clientes.iterator();
         while (iterator.hasNext()) {
-            ClientSocket clientSocket = iterator.next();
-            if (sender.equals(clientSocket))
+            ClienteSocket clienteSocket = iterator.next();
+            if (sender.equals(clienteSocket))
                 continue; // Não envie a mensagem de volta para o remetente
 
-            if (!clientSocket.sendMsg("cliente " + sender.getRemoteSocketAddress() + ": " + msg)) {
+            if (!clienteSocket.enviarMensagem("cliente " + sender.getEnderecoSocketRemoto() + ": " + msg)) {
                 iterator.remove(); // Remova o cliente se não for possível enviar a mensagem
             }
         }

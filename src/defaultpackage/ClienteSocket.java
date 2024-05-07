@@ -4,23 +4,23 @@ import java.io.*;
 import java.net.Socket;
 import java.net.SocketAddress;
 
-public class ClientSocket {
+public class ClienteSocket {
     private final Socket socket;
     private final BufferedReader in;
     private final PrintWriter out;
 
-    public ClientSocket(Socket socket) throws IOException{
+    public ClienteSocket(Socket socket) throws IOException{
         this.socket = socket;
         System.out.println("Cliente" + socket.getRemoteSocketAddress() + " conectou!");
         this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.out = new PrintWriter(socket.getOutputStream(), true);
     }
 
-    public SocketAddress getRemoteSocketAddress(){
+    public SocketAddress getEnderecoSocketRemoto(){
         return socket.getRemoteSocketAddress();
     }
 
-    public void close(){
+    public void fechar(){
         try {
             in.close();
             out.close();
@@ -30,7 +30,7 @@ public class ClientSocket {
         }
     }
 
-    public String getMessage(){
+    public String getMensagem(){
         try{
             return in.readLine();
         } catch(IOException e){
@@ -38,7 +38,7 @@ public class ClientSocket {
         }
     }
 
-    public boolean sendMsg(String msg){
+    public boolean enviarMensagem(String msg){
         out.println(msg);
         return !out.checkError();
     }
