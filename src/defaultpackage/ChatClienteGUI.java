@@ -49,11 +49,11 @@ public class ChatClienteGUI extends JFrame {
 
         conectarServer();
     }
-
+    
     private void conectarServer() {
         try {
-            Socket socket = new Socket(SERVER_ADDRESS, PORT); // Cria o Socket
-            clienteSocket = new ClienteSocket(socket); // Passa o Socket para o ClientSocket
+            Socket socket = new Socket(SERVER_ADDRESS, PORT); 
+            clienteSocket = new ClienteSocket(socket); 
             new Thread(this::receberMensagens).start();
         } catch (IOException e) {
             mostrarErro("Erro ao conectar ao servidor: " + e.getMessage());
@@ -64,10 +64,7 @@ public class ChatClienteGUI extends JFrame {
     private void enviarMensagem() {
         String mensagem = campoMensagem.getText().trim();
         if (!mensagem.isEmpty()) {
-            // Exibe a mensagem do cliente na área de chat antes de enviá-la para o servidor
             chatArea.append("Você: " + mensagem + "\n");
-
-            // Envia a mensagem para o servidor
             clienteSocket.enviarMensagem(mensagem);
             campoMensagem.setText("");
         }

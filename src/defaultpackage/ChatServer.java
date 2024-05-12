@@ -46,10 +46,10 @@ public class ChatServer {
         while (iterator.hasNext()) {
             ClienteSocket clienteSocket = iterator.next();
             if (sender.equals(clienteSocket))
-                continue; // Não envie a mensagem de volta para o remetente
+                continue; 
 
             if (!clienteSocket.enviarMensagem("cliente " + sender.getEnderecoSocketRemoto() + ": " + msg)) {
-                iterator.remove(); // Remova o cliente se não for possível enviar a mensagem
+                iterator.remove(); 
             }
         }
     }
