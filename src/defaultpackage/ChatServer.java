@@ -2,26 +2,36 @@ package defaultpackage;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 public class ChatServer {
     public static final int PORT = 4000;
     private ServerSocket serverSocket;
-    private final List<ClienteSocket> clientes = new LinkedList<>();
+    private final List<ClienteSocket> clientes = new ArrayList<>();
 
-    public void start() throws IOException {
-        serverSocket = new ServerSocket(PORT);
-        conexaoCliente();
-        System.out.println("Servidor iniciado na porta " + PORT);
+    public void start() {
+        try {
+            serverSocket = new ServerSocket(PORT);
+            System.out.println("Servidor iniciado na porta " + PORT);
+            conexaoCliente();
+        } catch (IOException ex) {
+            System.out.println("Erro ao iniciar a Comunicação: " + ex.getMessage());
+        }
+
+        System.out.println("Comunicação Encerrada!");
     }
 
-    private void conexaoCliente() throws IOException {
+    private void conexaoCliente() {
         while (true) {
-            ClienteSocket clienteSocket = new ClienteSocket(serverSocket.accept());
-            clientes.add(clienteSocket);
-            new Thread(() -> mensagemCliente(clienteSocket)).start();
+            try {
+                ClienteSocket clienteSocket = new ClienteSocket(serverSocket.accept());
+                clientes.add(clienteSocket);
+                new Thread(() -> mensagemCliente(clienteSocket)).start();
+            } catch (IOException ex) {
+                System.out.println("Erro ao aceitar conexão do cliente: " + ex.getMessage());
+            }
         }
     }
 
@@ -29,10 +39,11 @@ public class ChatServer {
         String mensagem;
         try {
             while ((mensagem = clienteSocket.getMensagem()) != null) {
-                if ("sair".equalsIgnoreCase(mensagem))
+                if ("sair".equalsIgnoreCase(mensagem)) {
                     return;
+                }
 
-                System.out.printf("Mensagem recebida do usuário %s: %s\n", clienteSocket.getEnderecoSocketRemoto(), mensagem);
+                System.out.printf("Mensagem recebida do usuário %s: %s\n", clienteSocket.getNome(), mensagem);
 
                 enviarMensagemParaTodos(clienteSocket, mensagem);
             }
@@ -45,23 +56,18 @@ public class ChatServer {
         Iterator<ClienteSocket> iterator = clientes.iterator();
         while (iterator.hasNext()) {
             ClienteSocket clienteSocket = iterator.next();
-            if (sender.equals(clienteSocket))
-                continue; 
+            if (sender.equals(clienteSocket)) {
+                continue;
+            }
 
-            if (!clienteSocket.enviarMensagem("cliente " + sender.getEnderecoSocketRemoto() + ": " + msg)) {
-                iterator.remove(); 
+            if (!clienteSocket.enviarMensagemParaCliente(sender.getNome() + ": " + msg)) {
+                iterator.remove();
             }
         }
     }
 
     public static void main(String[] args) {
-        try {
-            ChatServer server = new ChatServer();
-            server.start();
-        } catch (IOException ex) {
-            System.out.println("Erro ao iniciar a Comunicação: " + ex.getMessage());
-        }
-
-        System.out.println("Comunicação Encerrada!");
+        ChatServer server = new ChatServer();
+        server.start();
     }
 }

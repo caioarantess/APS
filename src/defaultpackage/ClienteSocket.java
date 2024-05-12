@@ -8,19 +8,27 @@ public class ClienteSocket {
     private final Socket socket;
     private final BufferedReader in;
     private final PrintWriter out;
+    private final String nome;
 
-    public ClienteSocket(Socket socket) throws IOException{
+    public ClienteSocket(Socket socket) throws IOException {
         this.socket = socket;
-        System.out.println("Cliente" + socket.getRemoteSocketAddress() + " conectou!");
         this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.out = new PrintWriter(socket.getOutputStream(), true);
+        this.nome = "";
     }
 
-    public SocketAddress getEnderecoSocketRemoto(){
-        return socket.getRemoteSocketAddress();
+    public ClienteSocket(Socket socket, String nome) throws IOException {
+        this.socket = socket;
+        this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        this.out = new PrintWriter(socket.getOutputStream(), true);
+        this.nome = nome;
     }
 
-    public void fechar(){
+    public String getNome() {
+        return nome;
+    }
+
+    public void fechar() {
         try {
             in.close();
             out.close();
@@ -30,18 +38,17 @@ public class ClienteSocket {
         }
     }
 
-    public String getMensagem(){
-        try{
+    public String getMensagem() {
+        try {
             return in.readLine();
-        } catch(IOException e){
+        } catch(IOException e) {
             return null;
         }
     }
 
-    public boolean enviarMensagem(String msg){
+    public boolean enviarMensagemParaCliente(String msg) {
         out.println(msg);
         return !out.checkError();
     }
-
-
 }
+
