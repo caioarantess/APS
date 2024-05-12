@@ -32,7 +32,7 @@ public class ChatServer {
                 if ("sair".equalsIgnoreCase(mensagem))
                     return;
 
-                System.out.printf("Msg recebida do cliente %s: %s\n", clienteSocket.getEnderecoSocketRemoto(), mensagem);
+                System.out.printf("Mensagem recebida do usuário %s: %s\n", clienteSocket.getEnderecoSocketRemoto(), mensagem);
 
                 enviarMensagemParaTodos(clienteSocket, mensagem);
             }
@@ -59,9 +59,9 @@ public class ChatServer {
             ChatServer server = new ChatServer();
             server.start();
         } catch (IOException ex) {
-            System.out.println("Erro ao iniciar o servidor: " + ex.getMessage());
+            System.out.println("Erro ao iniciar a Comunicação: " + ex.getMessage());
         }
 
-        System.out.println("Servidor finalizado");
+        System.out.println("Comunicação Encerrada!");
     }
 }

@@ -17,7 +17,7 @@ public class ChatClienteGUI extends JFrame {
     private JTextField campoMensagem;
 
     public ChatClienteGUI() {
-        setTitle("Chat Cliente");
+        setTitle("Chat Comunicação Rio Tietê");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(400, 300);
         setLocationRelativeTo(null);
