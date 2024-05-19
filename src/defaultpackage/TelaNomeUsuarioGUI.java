@@ -5,11 +5,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class TelaNomeUsuario extends JFrame {
+public class TelaNomeUsuarioGUI extends JFrame {
 
     private JTextField campoNome;
 
-    public TelaNomeUsuario() {
+    public TelaNomeUsuarioGUI() {
         setTitle("Login");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(300, 150);
@@ -40,7 +40,7 @@ public class TelaNomeUsuario extends JFrame {
                     dispose();
                     new ChatClienteGUI(nome);
                 } else {
-                    JOptionPane.showMessageDialog(TelaNomeUsuario.this, "Por favor, insira seu nome.", "Nome em branco", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(TelaNomeUsuarioGUI.this, "Por favor, insira seu nome.", "Nome em branco", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -51,7 +51,7 @@ public class TelaNomeUsuario extends JFrame {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                new TelaNomeUsuario();
+                new TelaNomeUsuarioGUI();
             }
         });
     }

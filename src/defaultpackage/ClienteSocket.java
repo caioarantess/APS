@@ -36,6 +36,7 @@ public class ClienteSocket {
         } catch (IOException e) {
             System.out.println("Erro ao fechar socket: " + e.getMessage());
         }
+        
     }
 
     public String getMensagem() {
